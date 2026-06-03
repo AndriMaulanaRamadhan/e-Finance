@@ -14,9 +14,9 @@
                 <div class="card-body">
                     
                     <div class="form-group">
-                        <label for="expense_name">Nama Pengeluaran / Keperluan <span class="text-danger">*</span></label>
-                        <input type="text" name="expense_name" class="form-control @error('expense_name') is-invalid @enderror" id="expense_name" placeholder="Contoh: Pembelian Hosting Dewabiz" value="{{ old('expense_name') }}">
-                        @error('expense_name')
+                        <label for="title">Nama Pengeluaran / Keperluan <span class="text-danger">*</span></label>
+                        <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" id="title" placeholder="Contoh: Pembelian Hosting Dewabiz" value="{{ old('title') }}">
+                        @error('title')
                             <span class="error invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
@@ -27,7 +27,7 @@
                             <option value="">-- Pilih Kategori --</option>
                             <option value="operational" {{ old('category') == 'operational' ? 'selected' : '' }}>Operasional Kantor (Listrik, Wifi, dll)</option>
                             <option value="marketing" {{ old('category') == 'marketing' ? 'selected' : '' }}>Pemasaran / Iklan (FB Ads, Google Ads)</option>
-                            <option value="project_cost" {{ old('category') == 'project_cost' ? 'selected' : '' }}>Modal Proyek (Plugin, Tema, Hosting Klien)</option>
+                            <option value="production" {{ old('category') == 'production' ? 'selected' : '' }}>Modal Proyek (Plugin, Tema, Hosting Klien)</option>
                             <option value="other" {{ old('category') == 'other' ? 'selected' : '' }}>Lain-lain</option>
                         </select>
                         @error('category')
@@ -74,6 +74,6 @@
                 </div>
             </form>
         </div>
-        </div>
+    </div>
 </div>
 @endsection

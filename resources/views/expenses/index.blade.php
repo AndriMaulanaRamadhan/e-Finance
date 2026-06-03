@@ -42,13 +42,13 @@
                         @forelse($expenses as $index => $expense)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td><strong>{{ $expense->expense_name }}</strong></td>
+                                <td><strong>{{ $expense->title }}</strong></td>
                                 <td>
                                     @if($expense->category == 'operational')
                                         <span class="badge badge-info">Operasional Kantor</span>
                                     @elseif($expense->category == 'marketing')
                                         <span class="badge badge-primary">Pemasaran / Iklan</span>
-                                    @elseif($expense->category == 'project_cost')
+                                    @elseif($expense->category == 'production')
                                         <span class="badge badge-purple" style="background-color: #6f42c1; color: white;">Modal Proyek</span>
                                     @elseif($expense->category == 'other')
                                         <span class="badge badge-secondary">Lain-lain</span>
@@ -83,7 +83,7 @@
                     </tbody>
                 </table>
             </div>
-            </div>
         </div>
+    </div>
 </div>
 @endsection

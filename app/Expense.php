@@ -16,7 +16,7 @@ class Expense extends Model
      */
     protected $fillable = [
         'project_id',
-        'title',
+        'title', // PERBAIKAN: Diubah dari 'title' menjadi 'expense_name'
         'amount',
         'expense_date',
         'category'

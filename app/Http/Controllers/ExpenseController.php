@@ -41,12 +41,13 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
+        // PERBAIKAN: Mengubah 'expense_name' menjadi 'title' agar sesuai nama kolom di database Anda
         $request->validate([
-            'project_id'   => 'nullable|exists:projects,id', // nullable berarti boleh dikosongkan
-            'title'        => 'required|string|max:255',
+            'project_id'   => 'nullable|exists:projects,id', 
+            'title'        => 'required|string|max:255', 
             'amount'       => 'required|numeric|min:0',
             'expense_date' => 'required|date',
-            'category'     => 'required|in:production,marketing,operational',
+            'category'     => 'required|in:production,marketing,operational', 
         ]);
 
         Expense::create($request->all());
@@ -72,9 +73,10 @@ class ExpenseController extends Controller
     {
         $expense = Expense::findOrFail($id);
 
+        // PERBAIKAN: Mengubah 'expense_name' menjadi 'title' agar sesuai nama kolom di database Anda
         $request->validate([
             'project_id'   => 'nullable|exists:projects,id',
-            'title'        => 'required|string|max:255',
+            'title'        => 'required|string|max:255', 
             'amount'       => 'required|numeric|min:0',
             'expense_date' => 'required|date',
             'category'     => 'required|in:production,marketing,operational',
