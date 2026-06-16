@@ -3,7 +3,7 @@
 @section('title', 'Dashboard Utama')
 
 @section('content')
-{{-- 1. 🟢 BANNER ALERT GLOBAL: Muncul otomatis jika ada cicilan yang melewati jatuh tempo --}}
+{{-- 1. BANNER ALERT GLOBAL: Muncul otomatis jika ada cicilan yang melewati jatuh tempo --}}
 @php
     $overdueLists = \App\InvoiceInstallment::where('status', 'unpaid')
         ->where('due_date', '<', \Carbon\Carbon::today())
@@ -35,21 +35,12 @@
     </div>
 @endif
 
-{{-- 2. BARIS CARD STATISTIK UTAMA --}}
+{{-- 2. BARIS CARD STATISTIK UTAMA (KEMBALI KE 4 KOTAK STANDAR - DIJAMIN RAPI & LUAS) --}}
 <div class="row">
   
+  {{-- Kotak 1: Proyek Aktif --}}
   <div class="col-12 col-sm-6 col-md-3">
     <div class="info-box shadow-sm">
-      <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
-      <div class="info-box-content">
-        <span class="info-box-text">Total Klien</span>
-        <span class="info-box-number">{{ $totalClients }}</span>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col-12 col-sm-6 col-md-3">
-    <div class="info-box mb-3 shadow-sm">
       <span class="info-box-icon bg-warning elevation-1 text-white"><i class="fas fa-project-diagram"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Proyek Aktif (Ongoing)</span>
@@ -58,8 +49,9 @@
     </div>
   </div>
 
+  {{-- Kotak 2: Total Pemasukan --}}
   <div class="col-12 col-sm-6 col-md-3">
-    <div class="info-box mb-3 shadow-sm">
+    <div class="info-box shadow-sm">
       <span class="info-box-icon bg-success elevation-1"><i class="fas fa-file-invoice-dollar"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Total Pemasukan</span>
@@ -68,19 +60,9 @@
     </div>
   </div>
   
+  {{-- Kotak 3: Cicilan Menunggak --}}
   <div class="col-12 col-sm-6 col-md-3">
-    <div class="info-box mb-3 shadow-sm">
-      <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-wallet"></i></span>
-      <div class="info-box-content">
-        <span class="info-box-text">Total Pengeluaran</span>
-        <span class="info-box-number">Rp {{ number_format($totalExpenses, 0, ',', '.') }}</span>
-      </div>
-    </div>
-  </div>
-
-  {{-- 3. 🟢 CARD BARU: Melacak Total Piutang/Cicilan Menunggak --}}
-  <div class="col-12 col-sm-6 col-md-3 mt-md-2">
-    <div class="info-box mb-3 shadow-sm bg-danger">
+    <div class="info-box shadow-sm bg-danger">
       <span class="info-box-icon elevation-1" style="background: rgba(0,0,0,0.1);"><i class="fas fa-comment-dollar"></i></span>
       <div class="info-box-content">
         <span class="info-box-text text-white">Cicilan Menunggak</span>
@@ -89,9 +71,20 @@
     </div>
   </div>
 
+  {{-- Kotak 4: Total Pengeluaran --}}
+  <div class="col-12 col-sm-6 col-md-3">
+    <div class="info-box shadow-sm">
+      <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-wallet"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Total Pengeluaran</span>
+        <span class="info-box-number">Rp {{ number_format($totalExpenses, 0, ',', '.') }}</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-{{-- 4. KOTAK REKAP KAS NET FINANSIAL --}}
+{{-- 3. KOTAK REKAP KAS NET FINANSIAL --}}
 <div class="row mt-3">
   <div class="col-md-12">
     <div class="card card-outline {{ $currentBalance >= 0 ? 'card-success' : 'card-danger' }} shadow-sm">
