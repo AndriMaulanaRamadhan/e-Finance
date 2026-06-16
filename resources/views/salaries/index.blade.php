@@ -84,8 +84,8 @@
                     </tbody>
                 </table>
             </div>
-            </div>
         </div>
+    </div>
 </div>
 
 @foreach($salaries as $salary)
@@ -123,17 +123,22 @@
                 </table>
 
                 <div class="card bg-secondary p-3 mb-2">
-                    <h6 class="font-weight-bold text-dark mb-2">Rincian Finansial:</h6>
-                    <div class="d-flex justify-content-between text-dark mt-1">
+                    {{-- PERBAIKAN: Mengubah text-dark menjadi text-white tebal agar kontras tinggi dan mudah dibaca --}}
+                    <h6 class="font-weight-bold text-white mb-2">Rincian Finansial:</h6>
+                    
+                    {{-- PERBAIKAN: Mengubah text-dark menjadi text-white untuk keterbacaan rincian --}}
+                    <div class="d-flex justify-content-between text-white mt-1">
                         <span>Gaji Pokok:</span>
                         <span class="font-weight-bold">Rp {{ number_format($salary->basic_salary, 0, ',', '.') }}</span>
                     </div>
-                    <div class="d-flex justify-content-between text-dark mt-1">
+                    <div class="d-flex justify-content-between text-white mt-1">
                         <span>Bonus & Lembur:</span>
                         <span class="font-weight-bold">Rp {{ number_format($salary->bonus, 0, ',', '.') }}</span>
                     </div>
                     <hr class="border-dark my-2">
-                    <div class="d-flex justify-content-between font-weight-bold text-danger">
+                    
+                    {{-- Tetap mempertahankan warna Hijau Pekat (#1b5e20) premium pilihan Anda --}}
+                    <div class="d-flex justify-content-between font-weight-bold" style="color: #1b5e20;">
                         <span>TOTAL DITERIMA:</span>
                         <span>Rp {{ number_format($salary->basic_salary + $salary->bonus, 0, ',', '.') }}</span>
                     </div>
