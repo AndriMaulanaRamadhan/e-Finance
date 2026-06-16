@@ -3,7 +3,7 @@
 @section('title', 'Dashboard Utama')
 
 @section('content')
-{{-- 1. BANNER ALERT GLOBAL: Muncul otomatis jika ada cicilan yang melewati jatuh tempo --}}
+{{-- 1. BANNER ALERT GLOBAL 1: Muncul otomatis jika ada cicilan yang melewati jatuh tempo --}}
 @php
     $overdueLists = \App\InvoiceInstallment::where('status', 'unpaid')
         ->where('due_date', '<', \Carbon\Carbon::today())
@@ -35,15 +35,40 @@
     </div>
 @endif
 
-{{-- 2. BARIS CARD STATISTIK UTAMA (KEMBALI KE 4 KOTAK STANDAR - DIJAMIN RAPI & LUAS) --}}
-<div class="row">
+{{-- 2. 🟢 PERBAIKAN: BANNER ALERT GLOBAL 2: Membaca properti database 'end_date' agar tidak memicu crash --}}
+@if(isset($upcomingDeadlines) && $upcomingDeadlines->count() > 0)
+    <div class="alert alert-warning alert-dismissible fade show shadow-sm mt-2 text-dark" role="alert">
+        <h5><i class="icon fas fa-hourglass-half"></i> <strong>Pemberitahuan: Tenggat Waktu Proyek Mendekati Batas!</strong></h5>
+        <p class="mb-2">Proyek aktif di bawah ini akan mendekati batas tanggal penyelesaian dalam waktu kurang dari 7 hari:</p>
+        <ul class="mb-0 pl-4">
+            @foreach($upcomingDeadlines as $proj)
+                @php
+                    // Mengubah target pencarian dari 'tanggal_selesai' ke 'end_date' sesuai sinkronisasi database
+                    $targetDate = \Carbon\Carbon::parse($proj->end_date);
+                    $daysLeft = \Carbon\Carbon::today()->diffInDays($targetDate, false);
+                @endphp
+                <li>
+                    Proyek <strong>{{ $proj->project_name }}</strong> (Klien: {{ $proj->client->name ?? 'Umum' }}) ➔ 
+                    <span class="badge badge-dark font-weight-bold">Sisa {{ $daysLeft }} Hari Lagi</span> 
+                    (Target Selesai: <span class="font-weight-bold">{{ date('d M Y', strtotime($proj->end_date)) }}</span>)
+                </li>
+            @endforeach
+        </ul>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+{{-- 3. BARIS CARD STATISTIK UTAMA (MENGGUNAKAN STANDAR 4 KOTAK - LEGA & AMAN) --}}
+<div class="row mt-3">
   
   {{-- Kotak 1: Proyek Aktif --}}
   <div class="col-12 col-sm-6 col-md-3">
     <div class="info-box shadow-sm">
       <span class="info-box-icon bg-warning elevation-1 text-white"><i class="fas fa-project-diagram"></i></span>
       <div class="info-box-content">
-        <span class="info-box-text">Proyek Aktif (Ongoing)</span>
+        <span class="info-box-text">Proyek Hack (Ongoing)</span>
         <span class="info-box-number">{{ $totalProjects }}</span>
       </div>
     </div>
@@ -84,7 +109,7 @@
 
 </div>
 
-{{-- 3. KOTAK REKAP KAS NET FINANSIAL --}}
+{{-- 4. KOTAK REKAP KAS NET FINANSIAL --}}
 <div class="row mt-3">
   <div class="col-md-12">
     <div class="card card-outline {{ $currentBalance >= 0 ? 'card-success' : 'card-danger' }} shadow-sm">

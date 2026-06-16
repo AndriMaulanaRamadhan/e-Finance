@@ -7,7 +7,7 @@ use App\Project;
 use App\Invoice;
 use App\Expense;
 use App\Salary;
-use App\InvoiceInstallment; // 🟢 Menggunakan model pecahan cicilan
+use App\InvoiceInstallment; // Menggunakan model pecahan cicilan
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -53,15 +53,25 @@ class DashboardController extends Controller
             ->where('due_date', '<', \Carbon\Carbon::today())
             ->sum('amount');
 
+        // 🟢 PERBAIKAN BUG AMAN: Mengubah filter pencarian ke kolom database 'end_date'
+        // Memastikan halaman utama tidak crash akibat salah membaca kolom 'tanggal_selesai'
+        $upcomingDeadlines = Project::where('status', 'ongoing')
+            ->whereNotNull('end_date') // Menggunakan end_date sesuai konvensi migrasi database
+            ->where('end_date', '>=', \Carbon\Carbon::today())
+            ->where('end_date', '<=', \Carbon\Carbon::today()->addDays(7))
+            ->with('client')
+            ->orderBy('end_date', 'asc')
+            ->get();
+
         // Diarahkan ke folder dashboard dan file index (dashboard/index.blade.php)
-        // Menambahkan variabel 'totalOverdueInstallments' ke dalam compact
         return view('dashboard.index', compact(
             'totalClients', 
             'totalProjects', 
             'totalRevenue', 
             'totalExpenses', 
             'currentBalance',
-            'totalOverdueInstallments'
+            'totalOverdueInstallments',
+            'upcomingDeadlines'
         ));
     }
 }
