@@ -39,6 +39,9 @@ Route::resource('projects', 'ProjectController');
 // Route Manajemen Invoice / Tagihan Pemasukan
 Route::resource('invoices', 'InvoiceController');
 
+// Route untuk mengupdate status centang cicilan termin
+Route::put('/invoices/installments/{id}', [App\Http\Controllers\InvoiceController::class, 'updateInstallment'])->name('invoices.update_installment');
+
 // Route Manajemen Pengeluaran Operasional Kantor
 Route::resource('expenses', 'ExpenseController');
 

@@ -64,6 +64,21 @@
                         @enderror
                     </div>
 
+                    {{-- 🟢 PERBAIKAN: Loop dinamis durasi cicilan dari 2x sampai 12x Bulan/Termin --}}
+                    <div class="form-group" id="durasi_cicilan_wrapper" style="display: none;">
+                        <label for="tenure">Durasi Cicilan / Jumlah Termin <span class="text-danger">*</span></label>
+                        <select name="tenure" id="tenure" class="form-control @error('tenure') is-invalid @enderror">
+                            @for ($i = 2; $i <= 12; $i++)
+                                <option value="{{ $i }}" {{ old('tenure') == $i ? 'selected' : '' }}>
+                                    {{ $i }}x Cicilan ({{ $i }} Bulan / Termin)
+                                </option>
+                            @endfor
+                        </select>
+                        @error('tenure')
+                            <span class="error invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                 </div>
                 <div class="card-footer text-right">
                     <a href="{{ route('invoices.index') }}" class="btn btn-secondary">Batal</a>
@@ -71,6 +86,31 @@
                 </div>
             </form>
         </div>
-        </div>
+    </div>
 </div>
+
+{{-- 🟢 JAVASCRIPT DINAMIS UNTUK LOGIKA DROPDOWN CICILAN --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var statusSelect = document.getElementById('status');
+        var cicilanWrapper = document.getElementById('durasi_cicilan_wrapper');
+        var tenureSelect = document.getElementById('tenure');
+
+        function toggleInstallmentDropdown() {
+            if (statusSelect.value === 'partially_paid') {
+                cicilanWrapper.style.display = 'block';
+                tenureSelect.setAttribute('required', 'required');
+            } else {
+                cicilanWrapper.style.display = 'none';
+                tenureSelect.removeAttribute('required');
+            }
+        }
+
+        // Jalankan fungsi saat halaman pertama kali dimuat (antisipasi jika ada old input error)
+        toggleInstallmentDropdown();
+
+        // Jalankan fungsi setiap kali status pembayaran diubah
+        statusSelect.addEventListener('change', toggleInstallmentDropdown);
+    });
+</script>
 @endsection

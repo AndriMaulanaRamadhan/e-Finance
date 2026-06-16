@@ -30,4 +30,12 @@ class Invoice extends Model
     {
         return $this->belongsTo(Project::class, 'project_id', 'id');
     }
+
+    /**
+     * 🟢 RELASI BARU: Setiap satu Invoice bisa memiliki banyak baris cicilan (Termin)
+     */
+    public function installments()
+    {
+        return $this->hasMany(InvoiceInstallment::class, 'invoice_id', 'id');
+    }
 }
