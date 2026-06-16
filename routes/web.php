@@ -44,3 +44,9 @@ Route::resource('expenses', 'ExpenseController');
 
 // Route Manajemen Gaji / Payroll Tim Developer
 Route::resource('salaries', 'SalaryController');
+// Route untuk download PDF Slip Gaji berdasarkan ID data gaji
+Route::get('/salaries/{id}/pdf', 'SalaryController@downloadPDF')->name('salaries.pdf');
+// Route Kelompok Manajemen Laporan Keuangan (Ry-Learn)
+Route::get('/reports', 'ReportController@index')->name('reports.index');
+Route::get('/reports/pdf', 'ReportController@downloadPDF')->name('reports.pdf');
+Route::get('/reports/excel', 'ReportController@downloadExcel')->name('reports.excel');

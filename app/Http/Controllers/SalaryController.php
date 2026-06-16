@@ -6,6 +6,7 @@ use App\Salary;
 use App\User;
 use App\Project;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SalaryController extends Controller
 {
@@ -98,5 +99,27 @@ class SalaryController extends Controller
         $salary->delete();
 
         return redirect()->route('salaries.index')->with('success', 'Catatan gaji berhasil dihapus!');
+    }
+
+    /**
+     * Mengonversi slip gaji menjadi PDF dan mendownloadnya.
+     */
+    public function downloadPDF($id)
+    {
+        // Ambil data gaji beserta data user/tim terkait
+        $salary = Salary::with('user')->findOrFail($id);
+        
+        // Hitung total bersih di controller untuk memastikan akurasi data
+        $totalPaid = $salary->basic_salary + $salary->bonus;
+
+        // PERBAIKAN: Menggunakan alias 'Pdf' (huruf kecil) sesuai dengan import facade di atas
+        $pdf = Pdf::loadView('salaries.pdf', compact('salary', 'totalPaid'));
+        
+        // Mengambil nama file dari relasi user ($salary->user->name)
+        $employeeName = $salary->user->name ?? 'Karyawan';
+        $fileName = 'Slip_Gaji_RyLearn_' . str_replace(' ', '_', $employeeName) . '_' . date('M_Y', strtotime($salary->payment_date)) . '.pdf';
+
+        // Download file PDF
+        return $pdf->download($fileName);
     }
 }

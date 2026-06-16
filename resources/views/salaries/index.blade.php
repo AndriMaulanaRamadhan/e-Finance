@@ -6,7 +6,6 @@
 <div class="row">
     <div class="col-12">
         
-        <!-- Notifikasi Sukses -->
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <h5><i class="icon fas fa-check"></i> Sukses!</h5>
@@ -21,13 +20,11 @@
             <div class="card-header">
                 <h3 class="card-title">Riwayat Penggajian & Payroll Tim Ry-Learn</h3>
                 <div class="card-tools">
-                    <!-- Tombol Tambah Transaksi Gaji -->
                     <a href="{{ route('salaries.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-coins"></i> Catat Pembayaran Gaji
                     </a>
                 </div>
             </div>
-            <!-- /.card-header -->
             <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                     <thead>
@@ -39,14 +36,13 @@
                             <th>Total Diterima</th>
                             <th>Tanggal Transfer</th>
                             <th>Keterangan Bonus</th>
-                            <th width="15%" class="text-center">Aksi</th>
+                            <th width="20%" class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($salaries as $index => $salary)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <!-- Mengambil nama user penerima -->
                                 <td><strong>{{ $salary->user->name ?? 'User Terhapus' }}</strong></td>
                                 <td>Rp {{ number_format($salary->basic_salary, 0, ',', '.') }}</td>
                                 <td>Rp {{ number_format($salary->bonus, 0, ',', '.') }}</td>
@@ -56,10 +52,14 @@
                                     </strong>
                                 </td>
                                 <td>{{ date('d M Y', strtotime($salary->payment_date)) }}</td>
-                                <!-- Mengambil nama proyek hubungan bonus -->
                                 <td>{{ $salary->project->project_name ?? '-' }}</td>
                                 <td class="text-center">
-                                    <form action="{{ route('salaries.destroy', $salary->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus catatan gaji ini?');">
+                                    
+                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#slipModal{{ $salary->id }}">
+                                        <i class="fas fa-file-invoice"></i> Slip Gaji
+                                    </button>
+
+                                    <form action="{{ route('salaries.destroy', $salary->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus catatan gaji ini?');">
                                         @csrf
                                         @method('DELETE')
                                         
@@ -84,9 +84,70 @@
                     </tbody>
                 </table>
             </div>
-            <!-- /.card-body -->
+            </div>
         </div>
-        <!-- /.card -->
+</div>
+
+@foreach($salaries as $salary)
+<div class="modal fade" id="slipModal{{ $salary->id }}" tabindex="-1" role="dialog" aria-labelledby="slipModalLabel{{ $salary->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="slipModalLabel{{ $salary->id }}">
+                    <i class="fas fa-receipt mr-2 text-success"></i>Pratinjau Slip Gaji Ry-Learn
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-4 text-left" style="color: #fff;">
+                <div class="text-center mb-3">
+                    <h4><strong>RY-LEARN E-FINANCE</strong></h4>
+                    <p class="text-muted small">Jl. Raya Ry-Learn Developer No. 1<br>Periode Kerja: {{ date('F Y', strtotime($salary->payment_date)) }}</p>
+                    <hr class="border-secondary">
+                </div>
+
+                <table class="table table-sm table-borderless text-white mb-3">
+                    <tr>
+                        <td width="40%">Nama Penerima</td>
+                        <td>: <strong>{{ $salary->user->name ?? 'User Terhapus' }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Tanggal Transfer</td>
+                        <td>: {{ date('d M Y', strtotime($salary->payment_date)) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Bonus Proyek</td>
+                        <td>: {{ $salary->project->project_name ?? '-' }}</td>
+                    </tr>
+                </table>
+
+                <div class="card bg-secondary p-3 mb-2">
+                    <h6 class="font-weight-bold text-dark mb-2">Rincian Finansial:</h6>
+                    <div class="d-flex justify-content-between text-dark mt-1">
+                        <span>Gaji Pokok:</span>
+                        <span class="font-weight-bold">Rp {{ number_format($salary->basic_salary, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-dark mt-1">
+                        <span>Bonus & Lembur:</span>
+                        <span class="font-weight-bold">Rp {{ number_format($salary->bonus, 0, ',', '.') }}</span>
+                    </div>
+                    <hr class="border-dark my-2">
+                    <div class="d-flex justify-content-between font-weight-bold text-danger">
+                        <span>TOTAL DITERIMA:</span>
+                        <span>Rp {{ number_format($salary->basic_salary + $salary->bonus, 0, ',', '.') }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
+                <a href="{{ route('salaries.pdf', $salary->id) }}" class="btn btn-danger btn-sm">
+                    <i class="fas fa-file-pdf mr-1"></i> Unduh PDF
+                </a>
+            </div>
+        </div>
     </div>
 </div>
+@endforeach
+
 @endsection

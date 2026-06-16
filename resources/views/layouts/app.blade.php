@@ -22,7 +22,7 @@
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
+      </td>
       <li class="nav-item d-none d-sm-inline-block">
         <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
       </li>
@@ -103,6 +103,13 @@
             <a href="{{ route('salaries.index') }}" class="nav-link {{ Request::is('salaries*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-money-check-alt"></i>
               <p>Gaji & Payroll Tim</p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ route('reports.index') }}" class="nav-link {{ Request::is('reports*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-file-medical-alt text-danger"></i>
+              <p>Laporan Keuangan</p>
             </a>
           </li>
 
